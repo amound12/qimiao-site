@@ -1,0 +1,17 @@
+# 密钥与环境配置
+.env
+
+# 数据与备份（生产数据只活在服务器上）
+data/
+data-test/
+backups/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# 编辑器
+.vscode/
+.idea/

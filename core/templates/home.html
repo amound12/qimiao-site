@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- M2 · 首屏（沿用设计模板） -->
+<section class="hero">
+  <div class="hero-copy">
+    <span class="status-badge">
+      <svg class="doodle" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="4" r="3.2" fill="#FF6B4A"/></svg>
+      v0.1 · 正在慢慢施工中
+    </span>
+    <div class="title-block">
+      <h1 class="hero-title">你好，我是<span class="name">{{ site_owner }}</span>。</h1>
+      <svg class="squiggle" viewBox="0 0 210 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 9C23 3 42 12 63 8C84 4 103 12 124 8C145 4 164 12 185 8C194 6.4 199 6.8 207 6" stroke="#FF6B4A" stroke-width="4" stroke-linecap="round"/></svg>
+    </div>
+    <p class="hero-sub">{{ site_intro }}</p>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-hero" href="#lab">看看我在折腾什么</a>
+      <a class="btn btn-ghost btn-hero" href="/about">认识一下我</a>
+    </div>
+    <p class="module-note">
+      <svg class="doodle" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 13C6 13.5 9.5 12 12.5 8.5M12.5 8.5L8.8 8.2M12.5 8.5L12 12.4" stroke="#8A857C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      本站按乐高式模块搭建 · 每一块都能单独拆装
+    </p>
+  </div>
+
+  <div class="hero-visual">
+    <div class="avatar-back" aria-hidden="true"></div>
+    <div class="avatar-card">
+      <img src="/static/images/avatar.png" alt="手绘头像">
+    </div>
+    <svg class="deco-star-1" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 3C14.8 9.4 16.8 11.6 24 12.4C17.3 13.7 15.1 15.9 14.6 24C13.6 17.3 11.5 14.5 4 13.2C11.3 11.6 13.2 9.6 14 3Z" fill="#FFC53D" stroke="#26231F" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    <svg class="deco-star-2" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2C10.6 6.8 12 8.4 17 9C12.4 9.9 10.8 11.5 10.4 18C9.7 12.6 8.2 10.6 3 9.6C8.2 8.4 9.4 6.9 10 2Z" fill="#FF6B4A"/></svg>
+    <span class="sticker-tag">业余码农 · 专业折腾</span>
+  </div>
+</section>
+
+<!-- 手绘分隔线 -->
+<svg class="hand-divider" viewBox="0 0 1280 20" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12C120 5 260 16 400 10C540 4 680 15 820 9C960 3 1100 14 1276 8" stroke="#E3DED4" stroke-width="2.5" stroke-linecap="round"/></svg>
+
+<!-- 实验室 · 模块入口卡片区（卡片由注册中心自动生成） -->
+<section class="lab" id="lab">
+  <div class="lab-head">
+    <h2 class="lab-title">实验室 <span>· 折腾中的小东西</span></h2>
+    <p class="lab-note">卡片由模块注册中心自动生成</p>
+  </div>
+  <div class="cards">
+    {% for card in home_cards %}
+    <a class="card" href="{{ card.url }}">
+      <div class="card-top">
+        <h3 class="card-title">{{ card.title }}</h3>
+        {% if card.badge %}<span class="badge">{{ card.badge }}</span>{% endif %}
+      </div>
+      <p class="card-desc">{{ card.description }}</p>
+      <span class="card-go">进入 →</span>
+    </a>
+    {% endfor %}
+    <div class="card card-ghost">
+      <div class="card-top">
+        <h3 class="card-title">新积木</h3>
+        <span class="badge badge-gray">排队中</span>
+      </div>
+      <p class="card-desc">更多小工具正在排队进场，敬请期待。</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

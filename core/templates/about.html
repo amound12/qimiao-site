@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}关于 · {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+  <div class="about-hero">
+    <div class="avatar-mini">
+      <img src="/static/images/avatar.png" alt="头像">
+    </div>
+    <div>
+      <h1 class="about-title">你好，我是{{ site_owner }}。</h1>
+      <p class="about-sub">{{ site_slogan }} —— 这里记录我的折腾日常。</p>
+    </div>
+  </div>
+
+  <!-- TODO(搭子)：把下面的占位文字换成你自己的简介 -->
+  <div class="about-body">
+    <p>
+      <strong>业余码农，专业折腾。</strong>
+      白天搬砖，晚上给这个小小的网站添砖加瓦。喜欢把想法做成能点开、能用的东西，
+      哪怕它小到只有一个待办清单。
+    </p>
+    <p>
+      这个站点本身也是一件作品：按乐高式模块搭建，每一块功能都能单独拆装。
+      你现在看到的，只是它 v0.1 的样子。
+    </p>
+  </div>
+
+  <div class="contact-cards">
+    <!-- TODO(搭子)：换成你的真实联系方式 -->
+    <div class="contact-card">
+      <span class="contact-label">GitHub</span>
+      <a class="contact-value" href="https://github.com/yourname" target="_blank" rel="noopener">@yourname</a>
+    </div>
+    <div class="contact-card">
+      <span class="contact-label">邮箱</span>
+      <a class="contact-value" href="mailto:you@example.com">you@example.com</a>
+    </div>
+    <div class="contact-card">
+      <span class="contact-label">碎碎念</span>
+      <span class="contact-value">想加功能就加一块积木</span>
+    </div>
+  </div>
+</section>
+{% endblock %}

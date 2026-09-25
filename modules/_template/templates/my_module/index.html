@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}我的新模块 · {{ site_name }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/modules/my_module/my_module.css">{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+  <div class="page-head">
+    <h1 class="page-title">我的新模块</h1>
+    <p class="page-meta">从这里开始</p>
+  </div>
+
+  <!-- TODO: 写你的页面内容，样式放 static/my_module.css -->
+  <p class="tpl-hello">积木已就位，开始搭建吧。</p>
+</section>
+{% endblock %}

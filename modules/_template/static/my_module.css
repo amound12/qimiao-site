@@ -1,0 +1,11 @@
+/* 我的新模块 · 模块私有样式（只使用全站设计令牌，不定义全局规则） */
+
+.tpl-hello {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: var(--card);
+  border: 1.5px dashed var(--line-sticker);
+  border-radius: var(--radius-page);
+  color: var(--body-muted);
+  font-size: 15px;
+}

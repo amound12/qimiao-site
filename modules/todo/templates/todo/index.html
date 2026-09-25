@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}每日待办 · {{ site_name }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/modules/todo/todo.css">{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+  <div class="page-head">
+    <h1 class="page-title">每日待办</h1>
+    <p class="page-meta">{{ day_label }}</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">今日待办</span>
+      <span class="stat-num" data-stat="total">{{ stats.total }} 项</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">已完成</span>
+      <span class="stat-num" data-stat="done">{{ stats.done }} 项</span>
+    </div>
+    <div class="stat-card stat-hot">
+      <span class="stat-label">连续打卡</span>
+      <span class="stat-num">{{ streak }} 天</span>
+    </div>
+  </div>
+
+  <form class="todo-form" id="todo-form">
+    <input class="todo-input" id="todo-input" type="text" maxlength="200"
+           placeholder="写点什么要做的…" autocomplete="off" required>
+    <button class="btn btn-primary todo-add" type="submit">添加</button>
+  </form>
+
+  <ul class="todo-list" id="todo-list">
+    {% for item in items %}
+    <li class="todo-item {% if item.done %}is-done{% endif %}" data-id="{{ item.id }}">
+      <button class="todo-check" type="button" aria-label="切换完成状态"></button>
+      <span class="todo-content">{{ item.content }}</span>
+      <button class="todo-del" type="button" aria-label="删除">×</button>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="todo-empty" id="todo-empty" {% if items %}hidden{% endif %}>今天还没有待办，先想一件小事写下来吧。</p>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="/static/modules/todo/todo.js"></script>{% endblock %}

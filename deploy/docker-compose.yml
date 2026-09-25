@@ -1,0 +1,14 @@
+# 奇妙小站 · 容器编排
+# 用法见 docs/部署手册.md；启动：docker compose up -d --build
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: qimiao-web
+    restart: unless-stopped      # 服务器重启后自动拉起
+    env_file: ../.env            # 站点配置与模块开关
+    ports:
+      - "127.0.0.1:8000:8000"    # 只监听本机回环：外部流量一律走 Nginx，不直接暴露
+    volumes:
+      - ../data:/app/data        # SQLite 数据落盘宿主机：备份/迁移/回滚只认这个目录

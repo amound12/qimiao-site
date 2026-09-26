@@ -3,7 +3,9 @@
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+# 国内服务器构建提速：pip 走清华镜像源，海外也能正常访问
 
 WORKDIR /app
 

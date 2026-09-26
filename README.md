@@ -40,7 +40,8 @@ pytest
 | 文档 | 内容 |
 |---|---|
 | [docs/架构说明.md](docs/架构说明.md) | 目录结构、模块注册机制、如何新增/禁用模块 |
-| [docs/部署手册.md](docs/部署手册.md) | 服务器从零部署：Docker + Nginx + HTTPS |
+| [docs/部署手册.md](docs/部署手册.md) | 服务器从零部署：Docker + Nginx + HTTPS（裸命令版） |
+| [docs/部署手册-宝塔面板版.md](docs/部署手册-宝塔面板版.md) | 阿里云 + 宝塔面板专用版（反代/SSL/定时备份走宝塔） |
 | [docs/日常维护手册.md](docs/日常维护手册.md) | 更新、备份、恢复、回滚、看日志、排障 |
 | [docs/新功能开发SOP.md](docs/新功能开发SOP.md) | 从建分支到上线打 tag 的完整流程 |
 

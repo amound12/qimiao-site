@@ -12,10 +12,10 @@ MODULE = ModuleManifest(
     title="每日待办",
     prefix="/todo",
     description="今天的事今天管——勾掉一项算一项。",
-    version="0.1.0",
-    nav_label="待办",
+    version="0.2.0",
+    nav_label="",              # v0.2 起退出顶部导航；留空 = 不进导航，从首页实验室卡片进入
     nav_order=10,
-    card_badge="v0.1 · 上线",
+    card_badge="v0.2 · 已优化",
 )
 
 

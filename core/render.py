@@ -28,12 +28,14 @@ def render(request: Request, name: str, status_code: int = 200, **ctx: Any):
 
     settings = load_settings()
 
-    # 导航 = 首页 + 各模块（带 nav_label 的）+ 关于，按 order 排序
+    # 导航 = 首页 + 各模块（带 nav_label 的）+ 实验室（首页锚点，站点本体）+ 关于，按 order 排序
     items: list[dict] = [{"url": "/", "label": "首页", "order": 0}]
     for lm in _registry.loaded:
         mf = lm.manifest
         if mf.nav_label:
             items.append({"url": mf.prefix, "label": mf.nav_label, "order": mf.nav_order})
+    # 实验室属于站点本体（首页卡片区锚点），不随模块启停变化
+    items.append({"url": "/#lab", "label": "实验室", "order": 30})
     items.append({"url": "/about", "label": "关于", "order": 999})
     items.sort(key=lambda x: x["order"])
 
@@ -41,8 +43,14 @@ def render(request: Request, name: str, status_code: int = 200, **ctx: Any):
     nav_items = [
         {
             **it,
+            # 高亮判定先剥掉 #fragment：request.url.path 不含 fragment，
+            # /#lab 这类锚点项必须按 path 部分比对，否则首页时实验室永远不亮
             # 按「整段路径」判断高亮，避免 /todo-xxx 也点亮「待办」
-            "active": path == it["url"] or (it["url"] != "/" and path.startswith(it["url"] + "/")),
+            "active": path == it["url"].split("#", 1)[0]
+            or (
+                it["url"].split("#", 1)[0] != "/"
+                and path.startswith(it["url"].split("#", 1)[0] + "/")
+            ),
         }
         for it in items
     ]
@@ -55,6 +63,7 @@ def render(request: Request, name: str, status_code: int = 200, **ctx: Any):
             "site_slogan": settings.site_slogan,
             "site_owner": settings.site_owner,
             "site_intro": settings.site_intro,
+            "site_version": settings.site_version,
             "nav_items": nav_items,
             **ctx,
         },

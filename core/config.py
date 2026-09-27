@@ -25,6 +25,7 @@ class Settings:
     site_slogan: str
     site_owner: str
     site_intro: str
+    site_version: str
     env: str
     modules_enabled: tuple[str, ...]
     data_dir: Path
@@ -32,7 +33,7 @@ class Settings:
 
 def load_settings() -> Settings:
     """每次调用都重新读取环境变量（测试和热切换模块组合时用）。"""
-    raw = os.getenv("MODULES_ENABLED", "todo")
+    raw = os.getenv("MODULES_ENABLED", "todo,notes")
     modules = tuple(
         item.strip() for item in raw.split(",") if item.strip()
     )
@@ -44,6 +45,7 @@ def load_settings() -> Settings:
             "SITE_INTRO",
             "这里是我折腾各种小东西的地方——写点随笔、做点小工具，偶尔冒出一些奇思妙想。",
         ),
+        site_version=os.getenv("SITE_VERSION", "0.2"),
         env=os.getenv("ENV", "production"),
         modules_enabled=modules,
         data_dir=BASE_DIR / os.getenv("DATA_DIR", "data"),

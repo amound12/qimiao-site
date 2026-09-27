@@ -56,4 +56,6 @@ cp -r modules/_template modules/your_module   # 1. 复制脚手架
 
 ## 版本
 
+- v0.1.1 —— 加固：字体自托管（不再依赖 Google Fonts）、修复模块静态资源挂载、接口 404 语义、
+  空白内容校验、安全响应头 + CSP、静态缓存头、/healthz 健康检查、SQLite WAL、CI 流水线
 - v0.1.0 —— 首版：核心框架 + 首页/关于/404 + 每日待办模块

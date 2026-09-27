@@ -1,0 +1,18 @@
+# 不打进镜像的东西（构建上下文瘦身 + 密钥隔离）
+# 注意：本文件必须位于【构建上下文根目录】（qimiao/），
+# docker-compose 的 build.context 是本目录，放 deploy/ 下不会被读取。
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+*.log
+.pytest_cache
+data
+data-*
+backups
+.env
+docs
+tests
+conftest.py
+*.md

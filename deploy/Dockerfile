@@ -24,4 +24,6 @@ USER qimiao
 EXPOSE 8000
 
 # 单进程足够自用小站；以后需要多 worker 再调 --workers
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# --proxy-headers：Nginx 反代后正确解析 X-Forwarded-For（容器只监听宿主机回环，信任来源安全）
+# --no-server-header：不暴露服务器软件版本
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips=*", "--no-server-header"]

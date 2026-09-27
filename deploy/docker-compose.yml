@@ -12,3 +12,9 @@ services:
       - "127.0.0.1:8000:8000"    # 只监听本机回环：外部流量一律走 Nginx，不直接暴露
     volumes:
       - ../data:/app/data        # SQLite 数据落盘宿主机：备份/迁移/回滚只认这个目录
+    healthcheck:                 # 容器健康状态：docker compose ps 里能看到 healthy/unhealthy
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -397,3 +397,145 @@ a.contact-value:hover { color: var(--accent); }
   .footer-bottom { flex-direction: column; gap: 8px; font-size: 11px; }
   .made-with { font-size: 18px; }
 }
+
+/* ============================================================
+   「打个招呼」三态交互样式（v0.2）
+   全部使用设计令牌；fixed 定位层不拦截点击（pointer-events: none）；
+   prefers-reduced-motion 下关闭一切位移/过渡，只保留文案。
+   ============================================================ */
+
+/* ---- 模式 A / 彩蛋文案 · 问候气泡 ---- */
+.greet-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%) translateY(8px);
+  max-width: min(86vw, 420px);
+  padding: 12px 22px;
+  background: var(--card);
+  border: 1.5px solid var(--line-sticker);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px rgba(38, 35, 31, 0.10);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 300ms ease, transform 300ms ease;
+  z-index: 90;
+}
+.greet-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---- 模式 B · 动画容器与内联 SVG ---- */
+.greet-art-wrap {
+  position: fixed;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 89;
+}
+.greet-art { width: 64px; height: 64px; overflow: visible; }
+.greet-art .ink-line { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.greet-art .ink-dot { fill: var(--ink); }
+
+.greet-wave .wave-arm {
+  transform-origin: 32px 52px;
+  animation: greet-wave-swing 0.4s ease-in-out 3;
+}
+@keyframes greet-wave-swing {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-22deg); }
+}
+
+.greet-face { animation: greet-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes greet-pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---- 模式 B · 彩带（24 个小方块，抛物线下落 + 旋转 + 淡出） ---- */
+.greet-confetti-box {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 89;
+}
+.greet-confetti {
+  position: absolute;
+  top: -12px;
+  border-radius: 2px;
+  opacity: 0.95;
+  animation: greet-confetti-fall 1.3s ease-in forwards;
+}
+@keyframes greet-confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.95; }
+  80% { opacity: 0.9; }
+  100% { transform: translateY(46vh) rotate(var(--spin, 540deg)); opacity: 0; }
+}
+
+/* ---- 模式 C · 彩蛋：背景渐变覆盖层 + 小猫走过 ---- */
+.greet-egg-veil {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;          /* 绝不拦截点击，播完即移除 */
+  background: linear-gradient(135deg, var(--accent-tint) 0%, var(--accent-soft) 100%);
+  opacity: 0;
+  animation: greet-veil 4.2s ease-in-out both;
+  z-index: 80;
+}
+@keyframes greet-veil {
+  0% { opacity: 0; }
+  20% { opacity: 0.9; }
+  75% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+.greet-cat {
+  position: fixed;
+  left: 0;
+  bottom: 12vh;
+  width: 150px;
+  pointer-events: none;
+  animation: greet-cat-walk 4s linear both;
+  z-index: 85;
+}
+.greet-cat .cat-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.greet-cat .cat-line.thin { stroke-width: 1.6; }
+.greet-cat .ink-dot { fill: var(--ink); }
+@keyframes greet-cat-walk {
+  0% { transform: translateX(-170px); }
+  100% { transform: translateX(100vw); }
+}
+.greet-cat .cat-bob { animation: greet-cat-bob 0.5s ease-in-out infinite alternate; }
+@keyframes greet-cat-bob {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2.5px); }
+}
+.greet-cat .leg { transform-origin: center 4px; }
+.greet-cat .leg-a { animation: greet-leg-swing 0.4s ease-in-out infinite alternate; }
+.greet-cat .leg-b { animation: greet-leg-swing 0.4s ease-in-out infinite alternate-reverse; }
+@keyframes greet-leg-swing {
+  0% { transform: rotate(14deg); }
+  100% { transform: rotate(-14deg); }
+}
+
+/* ---- 减少动态效果：跳过一切位移/闪烁，文案照常显示（不静默失败） ---- */
+@media (prefers-reduced-motion: reduce) {
+  .greet-toast { transition: none; transform: translateX(-50%); }
+  .greet-art-wrap,
+  .greet-confetti-box,
+  .greet-cat,
+  .greet-cat .cat-bob,
+  .greet-cat .leg { animation: none !important; }
+  .greet-egg-veil { animation: none !important; opacity: 0 !important; }
+}

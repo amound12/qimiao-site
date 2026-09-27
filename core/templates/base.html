@@ -29,7 +29,7 @@
       <a href="{{ item.url }}" {% if item.active %}class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>
       {% endfor %}
     </nav>
-    <a class="btn btn-primary" href="/about">打个招呼</a>
+    <button type="button" class="btn btn-primary" id="greet-btn" aria-label="打个招呼">打个招呼</button>
   </div>
   <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 7.2C9 6.4 15 6.6 20.5 7.4M3.5 12.1C9 11.4 15 11.6 20.5 12.3M3.5 17C9 16.5 15 16.6 20.5 17.2" stroke="#26231F" stroke-width="2" stroke-linecap="round"/></svg>

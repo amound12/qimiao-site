@@ -2,7 +2,7 @@
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin: 26px 0 28px;
 }
@@ -19,6 +19,32 @@
 .stat-num { font-size: 26px; font-weight: 500; font-family: var(--font-fun); color: var(--ink); }
 .stat-hot { background: var(--accent-tint); border-color: var(--accent-back); }
 .stat-hot .stat-num { color: var(--accent-dark); }
+
+/* 连续打卡卡：占满整行，容纳副文案 / 次级信息 / 7 天圆点 */
+.stat-streak { grid-column: 1 / -1; }
+.streak-sub { font-size: 13px; color: var(--accent-dark); }
+.streak-meta { font-size: 12px; color: var(--meta-muted); }
+
+.streak-dots {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+.streak-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--meta-muted);
+  flex: none;
+}
+.streak-dot.on { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+.streak-dot.today { border-color: var(--accent-dark); border-width: 2px; }
 
 .todo-form { display: flex; gap: 12px; }
 .todo-input {
@@ -96,6 +122,8 @@
   .stats-row { gap: 10px; }
   .stat-card { padding: 12px 14px; }
   .stat-num { font-size: 20px; }
+  .streak-dot { width: 22px; height: 22px; font-size: 9px; }
+  .streak-dots { gap: 6px; }
   .todo-form { flex-direction: column; }
   .todo-add { width: 100%; }
   .todo-del { opacity: 1; }

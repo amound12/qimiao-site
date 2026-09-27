@@ -32,8 +32,14 @@ def index(request: Request):
         day_label=models.day_label(),
         items=models.list_items(day),
         stats=models.day_stats(day),
-        streak=models.streak_days(),
+        streak=models.streak_stats(),
     )
+
+
+@router.get("/api/streak")
+def api_streak():
+    """打卡状态：前端勾选后增量刷新打卡卡片与 7 天圆点，避免整页重载。"""
+    return {"ok": True, "streak": models.streak_stats()}
 
 
 @router.post("/api/items")
@@ -48,6 +54,10 @@ def api_toggle(item_id: int):
     result = models.toggle_item(item_id)
     if result is None:
         raise HTTPException(status_code=404, detail="条目不存在")
+    if result["done"]:
+        # 勾成完成 → 记一次当天签到（幂等）；取消勾选不回滚签到记录：
+        # 误触不该有把 30 天纪录清零的代价，签到事实一旦发生就保留（产品判断）
+        models.ensure_checkin(result["day"])
     return {"ok": True, "item": result}
 
 

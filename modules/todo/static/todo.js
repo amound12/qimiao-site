@@ -17,6 +17,51 @@
     empty.hidden = items.length > 0;
   }
 
+  // ---- 连续打卡卡片：勾选后增量刷新（失败静默降级，保留旧数字） ----
+  function streakEl(name) {
+    return document.querySelector('[data-streak="' + name + '"]');
+  }
+
+  function subText(s) {
+    if (s.pending_today) return '连续 ' + s.current + ' 天 · 今天还没打卡';
+    if (s.recent[s.recent.length - 1].checked) return '今天已打卡 ✓';
+    return '今天还没打卡，续上就是第 1 天';
+  }
+
+  function renderStreak(s) {
+    var el;
+    if ((el = streakEl('current'))) el.textContent = s.current;
+    if ((el = streakEl('sub'))) el.textContent = subText(s);
+    if ((el = streakEl('meta'))) {
+      var meta = '最长 ' + s.longest + ' 天 · 累计 ' + s.total + ' 天';
+      if (s.milestone.next) meta += ' · 距离 ' + s.milestone.next + ' 天还有 ' + s.milestone.to_next + ' 天';
+      el.textContent = meta;
+    }
+    if ((el = streakEl('dots'))) {
+      el.innerHTML = '';
+      s.recent.forEach(function (d) {
+        var dot = document.createElement('span');
+        dot.className = 'streak-dot' + (d.checked ? ' on' : '') + (d.is_today ? ' today' : '');
+        dot.title = d.day + ' · ' + (d.checked ? '已打卡' : '未打卡');
+        dot.textContent = d.label;
+        el.appendChild(dot);
+      });
+    }
+  }
+
+  function refreshStreak() {
+    fetch('/todo/api/streak')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data && data.ok) renderStreak(data.streak); })
+      .catch(function () { /* 静默降级：保留旧数字，不弹错、不清空 UI */ });
+  }
+
+  // 跨天兜底：重新聚焦窗口时本地日期变了就整页刷新（轻量方案，不做状态机）
+  var loadedDay = new Date().toDateString();
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && new Date().toDateString() !== loadedDay) location.reload();
+  });
+
   function addItem(data) {
     var li = document.createElement('li');
     li.className = 'todo-item' + (data.done ? ' is-done' : '');
@@ -75,6 +120,7 @@
         if (res.ok) {
           li.classList.toggle('is-done', res.item.done);
           refreshStats();
+          refreshStreak();   // 勾选/取消后同步打卡卡片，页面不刷新
         }
       });
     }

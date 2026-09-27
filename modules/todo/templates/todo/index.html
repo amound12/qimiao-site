@@ -19,9 +19,16 @@
       <span class="stat-label">已完成</span>
       <span class="stat-num" data-stat="done">{{ stats.done }} 项</span>
     </div>
-    <div class="stat-card stat-hot">
+    <div class="stat-card stat-hot stat-streak">
       <span class="stat-label">连续打卡</span>
-      <span class="stat-num">{{ streak }} 天</span>
+      <span class="stat-num"><span data-streak="current">{{ streak.current }}</span> 天</span>
+      <span class="streak-sub" data-streak="sub">{% if streak.pending_today %}连续 {{ streak.current }} 天 · 今天还没打卡{% elif streak.recent[-1].checked %}今天已打卡 ✓{% else %}今天还没打卡，续上就是第 1 天{% endif %}</span>
+      <span class="streak-meta" data-streak="meta">最长 {{ streak.longest }} 天 · 累计 {{ streak.total }} 天{% if streak.milestone.next %} · 距离 {{ streak.milestone.next }} 天还有 {{ streak.milestone.to_next }} 天{% endif %}</span>
+      <div class="streak-dots" data-streak="dots">
+        {% for d in streak.recent %}
+        <span class="streak-dot{% if d.checked %} on{% endif %}{% if d.is_today %} today{% endif %}" title="{{ d.day }} · {{ '已打卡' if d.checked else '未打卡' }}">{{ d.label }}</span>
+        {% endfor %}
+      </div>
     </div>
   </div>
 

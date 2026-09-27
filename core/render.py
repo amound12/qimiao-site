@@ -24,7 +24,9 @@ def init(template_dirs: list, registry) -> None:
 
 def render(request: Request, name: str, status_code: int = 200, **ctx: Any):
     """渲染模板并返回响应。nav_items / 站点信息自动注入，无需每个页面重复传。"""
-    from core.config import settings
+    from core.config import load_settings
+
+    settings = load_settings()
 
     # 导航 = 首页 + 各模块（带 nav_label 的）+ 关于，按 order 排序
     items: list[dict] = [{"url": "/", "label": "首页", "order": 0}]
@@ -39,7 +41,8 @@ def render(request: Request, name: str, status_code: int = 200, **ctx: Any):
     nav_items = [
         {
             **it,
-            "active": path == it["url"] or (it["url"] != "/" and path.startswith(it["url"])),
+            # 按「整段路径」判断高亮，避免 /todo-xxx 也点亮「待办」
+            "active": path == it["url"] or (it["url"] != "/" and path.startswith(it["url"] + "/")),
         }
         for it in items
     ]

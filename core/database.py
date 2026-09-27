@@ -12,16 +12,19 @@
 import sqlite3
 from contextlib import contextmanager
 
-from core.config import settings
+from core.config import load_settings
 
 
 @contextmanager
 def connect(db_filename: str):
     """打开一个模块数据库连接，yield 出去，退出时提交/回滚并关闭。"""
-    path = settings.data_dir / db_filename
+    path = load_settings().data_dir / db_filename
     path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
+    conn = sqlite3.connect(path, timeout=10)
     conn.row_factory = sqlite3.Row
+    # WAL：读写互不阻塞（备份脚本同时读库也不会锁住写入）；busy_timeout 兜底锁冲突
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=5000")
     try:
         with conn:  # 事务块：正常退出 commit，异常 rollback
             yield conn

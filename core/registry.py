@@ -101,10 +101,9 @@ class Registry:
 
         core_dir = Path(__file__).parent
 
-        # 全站静态资源（设计令牌样式、头像等）
-        app.mount("/static", StaticFiles(directory=core_dir / "static"), name="static")
-
         # 各模块：静态资源挂到 /static/modules/<name>，路由挂到各自 prefix
+        # 注意顺序：模块静态必须先于核心 /static 挂载。Starlette 按注册顺序匹配，
+        # /static 是前缀挂载，先注册会把 /static/modules/<name>/xxx 整个吞掉 → 404。
         for lm in self.loaded:
             if lm.static_dir is not None:
                 app.mount(
@@ -114,6 +113,9 @@ class Registry:
                 )
             if lm.router is not None:
                 app.include_router(lm.router, prefix=lm.manifest.prefix)
+
+        # 全站静态资源（设计令牌样式、头像等）——兜底挂载放最后
+        app.mount("/static", StaticFiles(directory=core_dir / "static"), name="static")
 
         # 核心页面（首页/关于）永远在线
         app.include_router(pages_router)

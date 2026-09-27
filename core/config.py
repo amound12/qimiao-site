@@ -50,5 +50,6 @@ def load_settings() -> Settings:
     )
 
 
-# 模块级默认实例（绝大多数场景直接 from core.config import settings）
-settings = load_settings()
+# 注意：这里刻意不提供模块级 settings 单例。
+# 历史上存在「create_app 现读环境变量、其他模块用导入时刻单例」两套真相，
+# 环境变量改了之后容易出现配置漂移。统一入口：from core.config import load_settings

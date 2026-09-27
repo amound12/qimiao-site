@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}{{ site_name }} · {{ site_slogan }}{% endblock %}</title>
+<meta name="description" content="{{ site_intro }}">
+<meta name="theme-color" content="#FBFAF7">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ site_name }} · {{ site_slogan }}">
+<meta property="og:description" content="{{ site_intro }}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpath d='M13 2.5C13.7 8 15.4 9.9 21.5 10.6C15.7 11.7 13.9 13.5 13.4 20.5C12.6 14.7 10.9 12.4 4.5 11.3C10.6 9.9 12.3 8.3 13 2.5Z' fill='%23FF6B4A'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&family=ZCOOL+KuaiLe&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<!-- 字体已自托管（core/static/fonts/）：不依赖 Google Fonts，国内访问不卡首屏 -->
+<link rel="stylesheet" href="/static/fonts/fonts.css">
 <link rel="stylesheet" href="/static/site.css">
 {% block head %}{% endblock %}
 </head>
@@ -61,14 +65,7 @@
   </div>
 </footer>
 
-<script>
-  // 移动端菜单展开/收起
-  document.querySelector('.menu-toggle').addEventListener('click', function () {
-    var panel = document.querySelector('.nav-right');
-    var open = panel.classList.toggle('open');
-    this.setAttribute('aria-expanded', String(open));
-  });
-</script>
+<script src="/static/site.js" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -28,6 +28,25 @@ def create_app() -> FastAPI:
     registry = Registry(settings)
     registry.apply(app)
 
+    @app.middleware("http")
+    async def security_and_cache(request: Request, call_next):
+        """安全响应头 + 静态资源缓存（无论是否走 Nginx 都生效）。"""
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        # 全站无外链资源，CSP 可以收紧到只允许同源；内联脚本已外置到 /static/site.js
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; img-src 'self' data:; style-src 'self'; "
+            "script-src 'self'; font-src 'self'; frame-ancestors 'self'; "
+            "base-uri 'self'; form-action 'self'"
+        )
+        if request.url.path.startswith("/static/"):
+            # 文件名未做 hash 版本化，缓存 1 小时后须重新验证（ETag/Last-Modified 兜底）
+            response.headers["Cache-Control"] = "public, max-age=3600"
+        return response
+
     @app.exception_handler(StarletteHTTPException)
     async def http_exception_handler(request: Request, exc: StarletteHTTPException):
         """404 走定制贴纸风页面；其他错误码原样返回。"""

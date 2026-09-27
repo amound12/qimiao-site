@@ -35,7 +35,12 @@
       method: method,
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined
-    }).then(function (r) { return r.json(); });
+    }).then(function (r) {
+      // 非 2xx（如 404 条目不存在）统一折成 {ok:false}，调用方只看 res.ok
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        return r.ok ? data : { ok: false };
+      });
+    });
   }
 
   // 添加

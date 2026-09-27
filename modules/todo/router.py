@@ -1,7 +1,7 @@
 """每日待办 · 路由层：一个页面路由 + 三个 JSON 接口（页面无刷新交互）。"""
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from core.render import render
 from . import models
@@ -10,8 +10,16 @@ router = APIRouter()
 
 
 class ItemIn(BaseModel):
-    """添加待办的请求体：内容 1~200 字。"""
+    """添加待办的请求体：内容 trim 后 1~200 字（纯空白会被拒绝）。"""
     content: str = Field(min_length=1, max_length=200)
+
+    @field_validator("content")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("内容不能为空")
+        return v
 
 
 @router.get("", response_class=HTMLResponse)
@@ -30,7 +38,8 @@ def index(request: Request):
 
 @router.post("/api/items")
 def api_add(payload: ItemIn):
-    item = models.add_item(payload.content.strip())
+    # content 已在校验器里 trim 过
+    item = models.add_item(payload.content)
     return {"ok": True, "item": item}
 
 
@@ -38,10 +47,12 @@ def api_add(payload: ItemIn):
 def api_toggle(item_id: int):
     result = models.toggle_item(item_id)
     if result is None:
-        return {"ok": False, "msg": "条目不存在"}
+        raise HTTPException(status_code=404, detail="条目不存在")
     return {"ok": True, "item": result}
 
 
 @router.delete("/api/items/{item_id}")
 def api_delete(item_id: int):
-    return {"ok": models.delete_item(item_id)}
+    if not models.delete_item(item_id):
+        raise HTTPException(status_code=404, detail="条目不存在")
+    return {"ok": True}
